@@ -5,10 +5,9 @@ from c_types import TokenType
 
 
 
-
 # < > = !
 def tokenize(line: str, lineNumber: int):
-    tokens= []
+    tokens: Token = []
     i = 0
     index = 1
     length = len(line)
@@ -21,7 +20,7 @@ def tokenize(line: str, lineNumber: int):
         
 		# check if token is a delimeter
         if IS_DELIMITER(line[i]):
-            token = Token(TokenType.TOKEN_DELIMITER, line[i], lineNumber, index)
+            token = Token(TokenType.TOKEN_DELIMITER, line[i], lineNumber, index-len(line[i]))
             tokens.append(token)
         
         elif IS_COMPARATOR(line[i]):
@@ -33,7 +32,7 @@ def tokenize(line: str, lineNumber: int):
                 i += 1
                 index += 1
             
-            token = Token(TokenType.TOKEN_COMPARATOR, temp, lineNumber, index)
+            token = Token(TokenType.TOKEN_COMPARATOR, temp, lineNumber, index-len(temp))
             tokens.append(token)
 			
         
@@ -56,7 +55,7 @@ def tokenize(line: str, lineNumber: int):
                 index += 1
             
             
-            token = Token(temp_type, temp, lineNumber, index)
+            token = Token(temp_type, temp, lineNumber, index-len(temp))
             tokens.append(token)
         
         elif line[i].isnumeric():
@@ -71,7 +70,7 @@ def tokenize(line: str, lineNumber: int):
                 i += 1
                 index += 1
             
-            token = Token(TokenType.TOKEN_NUMBER, num, lineNumber, index)
+            token = Token(TokenType.TOKEN_NUMBER, num, lineNumber, index-len(num))
             tokens.append(token)
         
         elif line[i].isalpha() or line[i] == '#':
@@ -89,9 +88,11 @@ def tokenize(line: str, lineNumber: int):
             if IS_KEYWORD(word):
                 token_type = TokenType.TOKEN_KEYWORD
             
-            token = Token(token_type, word, lineNumber, index)
+            token = Token(token_type, word, lineNumber, index-len(word))
             tokens.append(token)
-        
+        else:
+            tokens.append(Token(TokenType.TOKEN_UNKNOWN, line[i], lineNumber, index-len(line[i])))
+
         i += 1   
 
     for tok in tokens:
@@ -103,10 +104,10 @@ def tokenize(line: str, lineNumber: int):
 
 
 
-file1 = open("main.c", "r")
+file1 = open("test/main.c", "r")
 
 inside_multi_line_comment = False
-lineNumber = 0
+lineNumber = 1
 while True:
     line = file1.readline()
     if not line:
@@ -120,6 +121,7 @@ while True:
  
             line = line.split("*/", 1)[1]
         else:
+            lineNumber+=1
             continue  # Skip this line if still inside a comment
     else:
         # Check if the line starts a multi-line comment
@@ -127,6 +129,7 @@ while True:
             inside_multi_line_comment = True
             # Remove everything before and including "/*"
             line = line.split("/*", 1)[0]
+            
 
     # Tokenize the line (outside of comments)
     tokenize(line, lineNumber)
