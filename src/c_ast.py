@@ -1,3 +1,5 @@
+import sys
+import platform
 import os
 from c_token import Token
 from c_utils import IS_DELIMITER, IS_KEYWORD, IS_COMPARATOR, IS_OPERATOR
@@ -104,35 +106,58 @@ def tokenize(line: str, lineNumber: int):
 
 
 
-file1 = open("test/main.c", "r")
 
-inside_multi_line_comment = False
-lineNumber = 1
-while True:
-    line = file1.readline()
-    if not line:
-        break
 
- 
-    if inside_multi_line_comment:
- 
-        if "*/" in line:
-            inside_multi_line_comment = False
- 
-            line = line.split("*/", 1)[1]
+def read_file(file_path: str):
+
+    file1 = open(file_path, "r")
+
+    inside_multi_line_comment = False
+    lineNumber = 1
+    while True:
+        line = file1.readline()
+        if not line:
+            break
+
+    
+        if inside_multi_line_comment:
+    
+            if "*/" in line:
+                inside_multi_line_comment = False
+    
+                line = line.split("*/", 1)[1]
+            else:
+                lineNumber+=1
+                continue  # Skip this line if still inside a comment
         else:
-            lineNumber+=1
-            continue  # Skip this line if still inside a comment
+            # Check if the line starts a multi-line comment
+            if "/*" in line:
+                inside_multi_line_comment = True
+                # Remove everything before and including "/*"
+                line = line.split("/*", 1)[0]
+                
+
+        # Tokenize the line (outside of comments)
+        tokenize(line, lineNumber)
+
+        
+        lineNumber += 1
+
+    file1.close()
+
+
+if __name__ == "__main__":
+    if len(sys.argv) > 1:
+        file_path = sys.argv[1]
+        if os.path.isfile(file_path):
+            delemiter = ''
+            delimiter = '\\' if platform.system() == "Windows" else '/' 
+            source_file = file_path.split(delimiter)[-1]
+            if source_file.lower().endswith(".c"):
+                read_file(file_path)
+            else:
+                raise Exception(f"Wrong File Type, {source_file} is not a valid C file")
+        else:
+            raise Exception(f"File Not Found, {file_path} does not exist")
     else:
-        # Check if the line starts a multi-line comment
-        if "/*" in line:
-            inside_multi_line_comment = True
-            # Remove everything before and including "/*"
-            line = line.split("/*", 1)[0]
-            
-
-    # Tokenize the line (outside of comments)
-    tokenize(line, lineNumber)
-    lineNumber += 1
-
-file1.close()
+        raise Exception("Not Enough Arguments, you should include a valid c file to parse")
