@@ -19,9 +19,10 @@ Parcer is a simple C parser implemented in Python. This parser is designed to to
    git clone https://github.com/duckduckcodes/parcer
     ```
 
-2.  ```bash
+    ```bash
         cd parcer
     ```
-3.  ```bash
+    
+    ```bash
         python3 src/c_ast.py [file]
     ```
