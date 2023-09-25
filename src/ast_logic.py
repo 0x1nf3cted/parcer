@@ -66,7 +66,7 @@ def parse_for_loop(init: [str], loop_token: [str]) -> ForLoopNode:
     parse_operation(operation)
 
 
-
+# add abilitty to parse operations
 
 
 def parse_condition(condition_tokens: [str]):
@@ -81,7 +81,7 @@ def parse_condition(condition_tokens: [str]):
 def parse_operation(operation_tokens: [str]):
     if len(operation_tokens) == 1:
         print(operation_tokens[0][0], operation_tokens[0][1:len(operation_tokens[0])])
-        
+
 
 
 
