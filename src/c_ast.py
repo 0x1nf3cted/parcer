@@ -4,10 +4,10 @@ import os
 from c_token import Token
 from c_utils import IS_DELIMITER, IS_KEYWORD, IS_COMPARATOR, IS_OPERATOR
 from c_types import TokenType
+from ast_logic import parser
 
 
-
-# < > = !
+ 
 def tokenize(line: str, lineNumber: int):
     tokens: Token = []
     i = 0
@@ -40,8 +40,15 @@ def tokenize(line: str, lineNumber: int):
         
         elif IS_OPERATOR(line[i]):
             temp = line[i]
+            op = ""
             index += 1
             temp_type = TokenType.TOKEN_OPERATOR
+            if((temp == '+' and line[i+1] == '+') or (temp == '-' and line[i+1] == '-')):
+                op += temp + line[i+1]
+                i+=2
+                token = Token(TokenType.TOKEN_PREASSIGN_INCREMENTER, op, lineNumber, index-len(op))
+                tokens.append(token)
+                continue
             if(line[i] == '/' and line[i+1] == '/'):
                 break
 			
@@ -80,6 +87,12 @@ def tokenize(line: str, lineNumber: int):
             index += 1
             temp = i + 1
             token_type = TokenType.TOKEN_IDENTIFIER
+            if((line[temp] == '+' and line[temp+1] == '+') or (line[temp] == '-' and line[temp+1] == '-')): # detect loop increment, (ex: t++, i--)
+                token_type = TokenType.TOKEN_LOOP_OPERATOR
+                word += line[temp] + line[temp+1]
+                index += 2
+                temp += 2
+                i += 2
             
             while temp < length and (line[temp].isalpha() or line[temp] == '_'):
                 word += line[temp]
@@ -97,8 +110,7 @@ def tokenize(line: str, lineNumber: int):
 
         i += 1   
 
-    for tok in tokens:
-        print(tok)
+
 
     return tokens
 
@@ -114,6 +126,7 @@ def read_file(file_path: str):
 
     inside_multi_line_comment = False
     lineNumber = 1
+    tokens: [Token] = []
     while True:
         line = file1.readline()
         if not line:
@@ -138,10 +151,13 @@ def read_file(file_path: str):
                 
 
         # Tokenize the line (outside of comments)
-        tokenize(line, lineNumber)
-
+        for it in tokenize(line, lineNumber):
+            tokens.append(it)
+        # for tok in tokens:
+        #     print(tok)
         
         lineNumber += 1
+    parser(tokens)
 
     file1.close()
 

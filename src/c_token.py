@@ -10,16 +10,19 @@ class Token:
 
 
 class ASTNode:
-    def __init__(self, node_type, value=None, position=None):
+    def __init__(self, node_type, value=None):
         self.node_type = node_type
         self.value = value
-        self.position = position
         self.children = []
         self.parent = None
 
     def add_child(self, child_node):
         child_node.parent = self
         self.children.append(child_node)
+
+    def __str__(self):
+        return f"AST(node_type='{self.node_type}', value='{self.value}', children={self.children}, parent={self.parent})"
+
 
     def to_string(self, level=0):
         indent = "  " * level
@@ -63,14 +66,9 @@ class MacroNode(ASTNode):
 
 # class for nodes (character, int, float, string, ect...)
 class VariableNode(ASTNode):
-    def __init__(self, value):
+    def __init__(self, value, varType):
+        self.varType = varType
         self.value = value
-
-
-# class for Identifiers
-class IdentifierNode(ASTNode):
-    def __init__(self, name):
-        self.name = name
 
 
 # class for Asignements
@@ -116,3 +114,11 @@ class ForLoopNode(ASTNode):
         self.condition = condition
         self.update = update
         self.body = body
+
+
+class LoopConditionNode(ASTNode):
+    def __init__(self, right, comparator, left):
+        self.right = right
+        self.comparator = comparator
+        self.left = left
+

@@ -10,4 +10,6 @@ class TokenType(Enum):
     TOKEN_KEYWORD = 8,
     TOKEN_DELIMITER = 9,
     TOKEN_UNKNOWN = 10,
-    TOKEN_PTR_CALL = 10
+    TOKEN_PTR_CALL = 11,
+    TOKEN_LOOP_OPERATOR = 12, # ex: i++, t--
+    TOKEN_PREASSIGN_INCREMENTER = 12, # ex: --a, ++b
