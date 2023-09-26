@@ -25,7 +25,7 @@ def get_comparator_index(token_stream: [str]):
     index= 0
     comparator_list = ['=', '<', '>', '!', '=', '<=', '>=', '!=', '==']
     for i in token_stream:
-        if i in comparator_list:
+        if i.value in comparator_list:
             return index
         else:
             index += 1

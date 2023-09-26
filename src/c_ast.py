@@ -4,7 +4,7 @@ import os
 from c_token import Token
 from c_utils import IS_DELIMITER, IS_KEYWORD, IS_COMPARATOR, IS_OPERATOR
 from c_types import TokenType
-from ast_logic import parser
+from ast_logic import init_parse
 
 
  
@@ -157,7 +157,8 @@ def read_file(file_path: str):
         #     print(tok)
         
         lineNumber += 1
-    parser(tokens)
+    init_parse(tokens)
+
 
     file1.close()
 
