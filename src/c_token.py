@@ -54,18 +54,22 @@ class BinaryOperatorNode(ASTNode):
         indent = "  " * level
         node_str = f"{indent}{self.node_type}:\n"
         
-        node_str += f"\tleft: {self.left}, operator: {self.operator}, right: {self.right}\n"
+        node_str += f"{indent}left: {self.left}, operator: {self.operator}, right: {self.right}\n"
         result = [node_str]
 
         # Recursively add child nodes
         if isinstance(self.left, ASTNode):
  
                 child_str = self.left.to_string(level + 1)
+                result.append(f"{indent}left: ")
                 result.extend(child_str.split('\n'))
-        elif isinstance(self.right, ASTNode):
- 
+
+        if isinstance(self.right, ASTNode):
+                
                 child_str = self.right.to_string(level + 1)
+                result.append(f"{indent}right: ")
                 result.extend(child_str.split('\n'))
+
 
         return '\n'.join(result)
 
@@ -83,13 +87,14 @@ class ArrayNode(ASTNode):
         indent = "  " * level
         node_str = f"{indent}{self.node_type}:"
         
-        node_str += f"\tname: {self.name}, size: {self.size}\n"
+        node_str += f"{indent}name: {self.name}, size: {self.size}\n"
         result = [node_str]
 
         # Recursively add child nodes
         if isinstance(self.elements, ASTNode):
  
                 child_str = self.elements.to_string(level + 1)
+                result.append(f"{indent}elements: ")
                 result.extend(child_str.split('\n'))
 
         return '\n'.join(result)
@@ -127,7 +132,7 @@ class VariableNode(ASTNode):
         indent = "  " * level
         node_str = f"{indent}{self.node_type}:\n"
         
-        node_str += f"\ttype: {self.varType}, identifier: {self.value}\n"
+        node_str += f"{indent}type: {self.varType}, identifier: {self.value}\n"
 
         result = [node_str]
 
@@ -137,11 +142,12 @@ class VariableNode(ASTNode):
 
 # class for Asignements
 class AssignmentNode(ASTNode):
-    def __init__(self, left, right, node_type):
+    def __init__(self, left, right, operator, node_type):
         super().__init__(node_type)
         self.node_type = node_type
         self.left = left
         self.right = right
+        self.operator = operator
     def to_string(self, level=0):
         indent = "  " * level
         node_str = f"{indent}{self.node_type}:"
@@ -152,12 +158,20 @@ class AssignmentNode(ASTNode):
  
         if isinstance(self.left, ASTNode):
             child_str = self.left.to_string(level + 1)
+            result.append(f"{indent}left: ")
             result.extend(child_str.split('\n'))
- 
+        else:
+            result.append(f"{indent}left: {self.left}")
+        
+        result.append(f"{indent}operator: {self.operator}")
  
         if isinstance(self.right, ASTNode):
             child_str = self.right.to_string(level + 1)
+            result.append(f"{indent}right: ")
             result.extend(child_str.split('\n'))
+        else:
+            
+            result.append(f"{indent}right: {self.right}")
  
 
         return '\n'.join(result)
@@ -215,7 +229,7 @@ class ForLoopNode(ASTNode):
         indent = "  " * level
         node_str = f"{indent}{self.node_type}:"
         
-        node_str += f"\tbody: {self.body}\n"
+        node_str += f"{indent}body: {self.body}\n"
         result = [node_str]
 
         # Recursively add child nodes
@@ -232,10 +246,12 @@ class ForLoopNode(ASTNode):
  
         if isinstance(self.update, ASTNode):
             child_str = self.update.to_string(level + 1)
+
             result.extend(child_str.split('\n'))
 
         if isinstance(self.body, ASTNode):
             child_str = self.body.to_string(level + 1)
+            
             result.extend(child_str.split('\n'))
             
         
@@ -256,7 +272,7 @@ class LoopConditionNode(ASTNode):
         indent = "  " * level
         node_str = f"{indent}{self.node_type}:\n"
         
-        node_str += f"\tleft: {self.left}, comparator: {self.comparator}, right: {self.right}\n"
+        node_str += f"{indent}left: {self.left}, comparator: {self.comparator}, right: {self.right}\n"
         result = [node_str]
 
         # Recursively add child nodes
@@ -272,6 +288,7 @@ class LoopConditionNode(ASTNode):
             for child in self.right:
                 if isinstance(child, ASTNode):
                     child_str = child.to_string(level + 1)
+                    
                     result.extend(child_str.split('\n'))
 
 

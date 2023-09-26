@@ -90,10 +90,10 @@ def parse_operation(operation_tokens: [str]):
         elif(operation_tokens[0][1:len(operation_tokens[0])] == "--"):
             operator = "-"
 
-        return AssignmentNode( node_type="Assignement", left=operation_tokens[0][0], right=BinaryOperatorNode( node_type="Binary Expression", operator=operator, left=operation_tokens[0][0], right="1"))
+        return AssignmentNode( node_type="Assignement", left=operation_tokens[0][0], right=BinaryOperatorNode( node_type="Binary Expression", operator=operator, left=operation_tokens[0][0], right="1"), operator="=")
     elif len(operation_tokens) == 3:
         operator = operation_tokens[1][0] # (ex: if +=, operator will be set to +, ect...)
-        return AssignmentNode( node_type="Assignement", left=operation_tokens[0], right=BinaryOperatorNode( node_type="Binary Expression", operator=operator, left=operation_tokens[0], right=operation_tokens[2]))
+        return AssignmentNode( node_type="Assignement", left=operation_tokens[0], right=BinaryOperatorNode( node_type="Binary Expression", operator=operator, left=operation_tokens[0], right=operation_tokens[2]), operator="=")
 
 
 
@@ -102,7 +102,7 @@ def parse_operation(operation_tokens: [str]):
 def parse_assign(assign_tokens: [str]):
     right = assign_tokens[-1:len(assign_tokens)]
     left = assign_tokens[0:-2]
-    return AssignmentNode(node_type="Assignement", right=right, left=parse_var(left))
+    return AssignmentNode(node_type="Assignement", right=right, left=parse_var(left), operator="=")
 
 
 def parse_var(var_tokens: [str]):
