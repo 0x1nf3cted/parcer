@@ -108,8 +108,8 @@ Entry:: Program
 
 ### Important Information
 
-Please be aware that this feature is still in development and may not be stable for production use. Use it at your own risk.
+Please be aware that this project is still in development and may not be stable for production use. Use it at your own risk.
 
-### Project Under Development
+### Contribution
 
-This project is actively under development. You're encouraged to explore, test, and provide feedback. Contributions in the form of bug reports, feature requests, or code contributions are welcome. Please see our [contribution guidelines](CONTRIBUTING.md) for more details on how to get involved.
+This project is actively under development. You're encouraged to explore, test, and provide feedback. Contributions in the form of bug reports, feature requests, or code contributions are welcome. Please see our [contribution guidelines](https://github.com/duckduckcodes/parcer/blob/main/CONTRIBUTING.md) for more details on how to get involved.
