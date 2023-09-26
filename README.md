@@ -18,11 +18,98 @@ Parcer is a simple C parser implemented in Python. This parser is designed to to
    ```bash
    git clone https://github.com/duckduckcodes/parcer
     ```
+2.  
+    ```bash
+    cd parcer
+    ```
+3.    
+    ```bash
+    python3 src/c_ast.py [file]
+    ```
 
-    ```bash
-        cd parcer
-    ```
-    
-    ```bash
-        python3 src/c_ast.py [file]
-    ```
+
+## Example:
+
+1.  **String** format
+
+### Input:
+
+```c
+
+for (int i = 0; i < 10; i += 1) {
+    printf("%d", i);
+}
+
+```
+
+### Output:
+
+```
+Entry:: Program
+  For Loop:  body: ['{', 'printf', '(', '"', '%', 'd', '"', ',', 'i', ')', ';', '}']
+
+    Assignement:
+    left: 
+      Variable:
+      type: int, identifier: i
+    operator: =
+    right: ['0']
+
+    Loop Condition:
+    left: ['i'], comparator: <, right: ['10']
+
+    Assignement:
+    left: i
+    operator: =
+    right: 
+      Binary Expression:
+      left: i, operator: +, right: 1
+```
+
+2.  **JSON** format:
+
+```json
+{
+  "node_type": "Entry",
+  "value": "Program",
+  "parent": null,
+  "children": {
+    "node_type": "For Loop",
+    "body": ["{", "printf", "(", "\"", "%", "d", "\"", ",", "i", ")", ";", "}"],
+    "Initialization": {
+      "node_type": "Assignement",
+      "operator": "=",
+      "left": { "node_type": "Variable", "value": "i", "parent": null },
+      "right": ["0"]
+    },
+    "Condition": {
+      "node_type": "Loop Condition",
+      "comparator": "<",
+      "left": ["i"],
+      "right": ["10"]
+    },
+    "Update": {
+      "node_type": "Assignement",
+      "operator": "=",
+      "left": "i",
+      "right": {
+        "node_type": "Binary Expression",
+        "operator": "+",
+        "left": "i",
+        "right": "1"
+      }
+    }
+  }
+}
+```
+
+
+## ⚠️ Warnings
+
+### Important Information
+
+Please be aware that this feature is still in development and may not be stable for production use. Use it at your own risk.
+
+### Project Under Development
+
+This project is actively under development. You're encouraged to explore, test, and provide feedback. Contributions in the form of bug reports, feature requests, or code contributions are welcome. Please see our [contribution guidelines](CONTRIBUTING.md) for more details on how to get involved.

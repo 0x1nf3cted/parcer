@@ -23,7 +23,17 @@ class ASTNode:
     def __str__(self):
         return f"AST(node_type='{self.node_type}', value='{self.value}', children={self.children}, parent={self.parent})"
 
+    def to_json(self):
+        ast = {}
+        
+        ast["node_type"] = self.node_type
+        ast["value"] = self.value
+        ast["parent"] = None
+        for child in self.children:
+            ast["children"] = child.to_json()
 
+        return ast
+        
 
     def to_string(self, level=0):
         indent = "  " * level
@@ -49,10 +59,28 @@ class BinaryOperatorNode(ASTNode):
         self.operator = operator
         self.left = left
         self.right = right
-    
+
+
+    def to_json(self):
+        BinaryOperatorAST = {}
+        
+        BinaryOperatorAST["node_type"] = self.node_type
+        BinaryOperatorAST["operator"] = self.operator
+        
+        if isinstance(self.left, ASTNode):
+            BinaryOperatorAST["left"] = self.left.to_json()
+        else:
+            BinaryOperatorAST["left"] = self.left
+
+        if isinstance(self.right, ASTNode):
+            BinaryOperatorAST["right"] = self.right.to_json()
+        else:
+            BinaryOperatorAST["right"] = self.right
+
+        return BinaryOperatorAST
     def to_string(self, level=0):
         indent = "  " * level
-        node_str = f"{indent}{self.node_type}:\n"
+        node_str = f"{indent}{self.node_type}:"
         
         node_str += f"{indent}left: {self.left}, operator: {self.operator}, right: {self.right}\n"
         result = [node_str]
@@ -87,7 +115,7 @@ class ArrayNode(ASTNode):
         indent = "  " * level
         node_str = f"{indent}{self.node_type}:"
         
-        node_str += f"{indent}name: {self.name}, size: {self.size}\n"
+        node_str += f"{indent}name: {self.name}, size: {self.size}"
         result = [node_str]
 
         # Recursively add child nodes
@@ -132,7 +160,7 @@ class VariableNode(ASTNode):
         indent = "  " * level
         node_str = f"{indent}{self.node_type}:\n"
         
-        node_str += f"{indent}type: {self.varType}, identifier: {self.value}\n"
+        node_str += f"{indent}type: {self.varType}, identifier: {self.value}"
 
         result = [node_str]
 
@@ -148,6 +176,25 @@ class AssignmentNode(ASTNode):
         self.left = left
         self.right = right
         self.operator = operator
+
+
+    def to_json(self):
+        AssignmentAST = {}
+        
+        AssignmentAST["node_type"] = self.node_type
+        AssignmentAST["operator"] = self.operator
+        
+        if isinstance(self.left, ASTNode):
+            AssignmentAST["left"] = self.left.to_json()
+        else:
+            AssignmentAST["left"] = self.left
+
+        if isinstance(self.right, ASTNode):
+            AssignmentAST["right"] = self.right.to_json()
+        else:
+            AssignmentAST["right"] = self.right
+
+        return AssignmentAST
     def to_string(self, level=0):
         indent = "  " * level
         node_str = f"{indent}{self.node_type}:"
@@ -225,6 +272,23 @@ class ForLoopNode(ASTNode):
         self.update = update
         self.body = body
 
+    def to_json(self):
+        ForLoopAST = {}
+        
+        ForLoopAST["node_type"] = self.node_type
+        ForLoopAST["body"] = self.body
+        
+        if isinstance(self.initialization, ASTNode):
+            ForLoopAST["Initialization"] = self.initialization.to_json()
+
+        if isinstance(self.condition, ASTNode):
+            ForLoopAST["Condition"] = self.condition.to_json()
+ 
+        if isinstance(self.update, ASTNode):
+            ForLoopAST["Update"] = self.update.to_json()
+
+        return ForLoopAST
+
     def to_string(self, level=0):
         indent = "  " * level
         node_str = f"{indent}{self.node_type}:"
@@ -268,11 +332,29 @@ class LoopConditionNode(ASTNode):
         self.comparator = comparator
         self.left = left
 
+    def to_json(self):
+        LoopConditionAST = {}
+        
+        LoopConditionAST["node_type"] = self.node_type
+        LoopConditionAST["comparator"] = self.comparator
+        
+        if isinstance(self.left, ASTNode):
+            LoopConditionAST["left"] = self.left.to_json()
+        else:
+            LoopConditionAST["left"] = self.left
+
+        if isinstance(self.right, ASTNode):
+            LoopConditionAST["right"] = self.right.to_json()
+        else:
+            LoopConditionAST["right"] = self.right
+
+        return LoopConditionAST
+
     def to_string(self, level=0):
         indent = "  " * level
         node_str = f"{indent}{self.node_type}:\n"
         
-        node_str += f"{indent}left: {self.left}, comparator: {self.comparator}, right: {self.right}\n"
+        node_str += f"{indent}left: {self.left}, comparator: {self.comparator}, right: {self.right}"
         result = [node_str]
 
         # Recursively add child nodes

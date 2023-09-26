@@ -36,7 +36,11 @@ def parser(tokens: [Token]):
             i += 1
 
     # Return AST after processing all tokens
-    print(ast.to_string())
+
+    # print(ast.to_string())
+    print(ast.to_json())
+    with open("./ast.json", "w") as json_file:
+        json.dump(ast.to_json(), json_file)
     return ast
 
 
